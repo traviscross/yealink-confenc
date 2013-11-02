@@ -7,27 +7,22 @@
 # the encryption tool and writes the result to a second file, also
 # using AES-128-ECB.
 
-encrypt_key () {
-  openssl enc -aes-128-ecb -nopad \
-    -K $(printf 'EKs35XacP6eybA25' | xxd -p)
-}
-
-decrypt_key () {
-  openssl enc -aes-128-ecb -d -nopad \
-    -K $(printf 'EKs35XacP6eybA25' | xxd -p)
-}
-
-encrypt_cfg () {
-  local key="$1"
+encrypt () {
+ local key="$1"
   openssl enc -aes-128-ecb -nopad \
     -K $(printf "$key" | xxd -p)
 }
 
-decrypt_cfg () {
+decrypt () {
   local key="$1"
   openssl enc -aes-128-ecb -d -nopad \
     -K $(printf "$key" | xxd -p)
 }
+
+encrypt_key () { encrypt 'EKs35XacP6eybA25'; }
+decrypt_key () { decrypt 'EKs35XacP6eybA25'; }
+encrypt_cfg () { encrypt "$1"; }
+decrypt_cfg () { decrypt "$1"; }
 
 test_lib () {
   printf "Test that key decryption/encryption produces identical results..."

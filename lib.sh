@@ -8,25 +8,23 @@
 # using AES-128-ECB.
 
 encrypt_key () {
-  local key="$1"
-  printf "$key" | openssl enc -aes-128-ecb -nopad \
+  openssl enc -aes-128-ecb -nopad \
     -K $(printf 'EKs35XacP6eybA25' | xxd -p)
 }
 
 decrypt_key () {
-  local keyfile="$1"
-  openssl enc -aes-128-ecb -d -nopad -in $keyfile \
+  openssl enc -aes-128-ecb -d -nopad \
     -K $(printf 'EKs35XacP6eybA25' | xxd -p)
 }
 
 encrypt_cfg () {
-  local cfg="$1" key="$2"
-  openssl enc -aes-128-ecb -nopad -in $cfg \
+  local key="$1"
+  openssl enc -aes-128-ecb -nopad \
     -K $(printf "$key" | xxd -p)
 }
 
 decrypt_cfg () {
-  local cfg="$1" key="$2"
-  openssl enc -aes-128-ecb -d -nopad -in $cfg \
+  local key="$1"
+  openssl enc -aes-128-ecb -d -nopad \
     -K $(printf "$key" | xxd -p)
 }

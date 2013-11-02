@@ -7,16 +7,16 @@
 # the encryption tool and writes the result to a second file, also
 # using AES-128-ECB.
 
+encrypt_key () {
+  local key="$1"
+  printf "$key" | openssl enc -aes-128-ecb -nopad \
+    -K $(printf 'EKs35XacP6eybA25' | xxd -p)
+}
+
 decrypt_key () {
   local keyfile="$1"
   openssl enc -aes-128-ecb -d -nopad -in $keyfile \
     -K $(printf 'EKs35XacP6eybA25' | xxd -p)
-}
-
-decrypt_cfg () {
-  local cfg="$1" key="$2"
-  openssl enc -aes-128-ecb -d -nopad -in $cfg \
-    -K $(printf "$key" | xxd -p)
 }
 
 encrypt_cfg () {
@@ -25,8 +25,8 @@ encrypt_cfg () {
     -K $(printf "$key" | xxd -p)
 }
 
-encrypt_key () {
-  local key="$1"
-  printf "$key" | openssl enc -aes-128-ecb -nopad \
-    -K $(printf 'EKs35XacP6eybA25' | xxd -p)
+decrypt_cfg () {
+  local cfg="$1" key="$2"
+  openssl enc -aes-128-ecb -d -nopad -in $cfg \
+    -K $(printf "$key" | xxd -p)
 }

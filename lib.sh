@@ -28,3 +28,13 @@ decrypt_cfg () {
   openssl enc -aes-128-ecb -d -nopad \
     -K $(printf "$key" | xxd -p)
 }
+
+test_lib () {
+  printf "Test that key decryption/encryption produces identical results..."
+  (decrypt_key < test/test_Security.enc | encrypt_key | diff test/test_Security.enc -) \
+    && printf "Success\n" || printf "Failure\n"
+  printf "Test that we produce identical encrypted configs..."
+  local key=$(decrypt_key < test/test_Security.enc)
+  (decrypt_cfg $key < test/test.cfg | encrypt_cfg $key | diff test/test.cfg -) \
+    && printf "Success\n" || printf "Failure\n"
+}
